@@ -1,5 +1,7 @@
 # Machine Learning
 
+* Blog (CGABC): https://cgabc.xyz/categories/ML/
+
 ---
 
 
