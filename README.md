@@ -1,5 +1,5 @@
-# Machine Learning in Action :musical_keyboard:
+# Machine Learning Base
 
 ---
 
-* [《机器学习实战》读书笔记](http://www.pythoner.com/238.html)
+- https://github.com/cggos/dl_with_pytorch
