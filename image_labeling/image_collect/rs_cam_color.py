@@ -6,15 +6,16 @@ import cv2
 
 if __name__ == '__main__':
     img_dir = sys.argv[1]
+    idx_s = sys.argv[2]
 
     cap = cv2.VideoCapture(4)
-    width = 640
-    height = 480
+    width = 1280
+    height = 720
 
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
-    i = 211
+    i = int(idx_s)
     while True:
         ret, frame = cap.read()
         k = cv2.waitKey(1)
