@@ -91,3 +91,5 @@ ENV/
 site/
 
 .idea/
+
+*.out*
