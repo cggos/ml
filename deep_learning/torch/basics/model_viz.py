@@ -6,31 +6,10 @@
 """
 
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 from torchviz import make_dot
 
 from dogs_vs_cats import network_model
-
-
-class ModelTest(nn.Module):
-    def __init__(self):
-        super(ModelTest, self).__init__()
-        self.conv1 = nn.Conv2d(3, 16, 3, 1, padding=1)
-        self.bn1 = nn.BatchNorm2d(16)
-        self.conv2 = nn.Conv2d(16, 64, 3, 1, padding=1)
-        self.bn2 = nn.BatchNorm2d(64)
-        self.conv3 = nn.Conv2d(64, 10, 3, 1, padding=1)
-        self.bn3 = nn.BatchNorm2d(10)
-
-    def forward(self, x):
-        x = self.bn1(self.conv1(x))
-        x = F.relu(x)
-        x = self.bn2(self.conv2(x))
-        x = F.relu(x)
-        x = self.bn3(self.conv3(x))
-        x = F.relu(x)
-        return x
+from models.model_diy import ModelTest
 
 
 if __name__ == "__main__":
@@ -44,13 +23,13 @@ if __name__ == "__main__":
 
     method = 1
     if method == 0:
-        torch.save(model0, "modelviz.out.pt")  # netron
+        torch.save(model0, "model.out.pt")  # netron
     elif method == 1:
         g = make_dot(out0)  # graphviz
-        g.render("modelviz.out", view=True)
+        g.render("model.out", view=True)
         # g.view()
     # elif method == 2:
     #     # 1. 来用tensorflow进行可视化
     #     from tensorboardX import SummaryWriter
     #     with SummaryWriter("./log", comment="sample_model_visualization") as sw:
-    #         sw.add_graph(modelviz, sampledata)
+    #         sw.add_graph(model, sampledata)

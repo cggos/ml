@@ -9,7 +9,7 @@ import time
 print("torch version: {}".format(torch.__version__))
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print('Using gpu: %s ' % torch.cuda.is_available())
+print("Using gpu: %s " % torch.cuda.is_available())
 
 x = torch.Tensor(5, 3)  # 构造一个未初始化的5*3的矩阵
 x = torch.rand(5, 3)  # 构造一个随机初始化的矩阵
@@ -50,11 +50,11 @@ a = torch.rand(10000, 10000)
 b = torch.rand(10000, 10000)
 a.matmul(b)
 te = time.time()
-print('time cost: ', te - ts, 's')
+print("time cost: ", te - ts, "s")
 
 ts = time.time()
 a = a.cuda()
 b = b.cuda()
 a.matmul(b)
 te = time.time()
-print('time cost: ', te - ts, 's')
+print("time cost: ", te - ts, "s")

@@ -4,6 +4,9 @@ from PIL import Image
 import torch
 from torchvision import transforms
 
+# from torchsummary import summary
+from torchinfo import summary
+
 
 def transform_invert(img_, transform_train):
     """
@@ -12,9 +15,16 @@ def transform_invert(img_, transform_train):
     :param transform_train: torchvision.transforms
     :return: PIL image
     """
-    if 'Normalize' in str(transform_train):
-        norm_transform = list(filter(lambda x: isinstance(x, transforms.Normalize), transform_train.transforms))
-        mean = torch.tensor(norm_transform[0].mean, dtype=img_.dtype, device=img_.device)
+    if "Normalize" in str(transform_train):
+        norm_transform = list(
+            filter(
+                lambda x: isinstance(x, transforms.Normalize),
+                transform_train.transforms,
+            )
+        )
+        mean = torch.tensor(
+            norm_transform[0].mean, dtype=img_.dtype, device=img_.device
+        )
         std = torch.tensor(norm_transform[0].std, dtype=img_.dtype, device=img_.device)
         img_.mul_(std[:, None, None]).add_(mean[:, None, None])
 
@@ -22,10 +32,47 @@ def transform_invert(img_, transform_train):
     img_ = np.array(img_) * 255
 
     if img_.shape[2] == 3:
-        img_ = Image.fromarray(img_.astype('uint8')).convert('RGB')
+        img_ = Image.fromarray(img_.astype("uint8")).convert("RGB")
     elif img_.shape[2] == 1:
-        img_ = Image.fromarray(img_.astype('uint8').squeeze())
+        img_ = Image.fromarray(img_.astype("uint8").squeeze())
     else:
-        raise Exception("Invalid img shape, expected 1 or 3 in axis 2, but got {}!".format(img_.shape[2]))
+        raise Exception(
+            "Invalid img shape, expected 1 or 3 in axis 2, but got {}!".format(
+                img_.shape[2]
+            )
+        )
 
     return img_
+
+
+def output_model_params(net, input_shape):
+    print("\n****************** net torchsummary ******************")
+    summary(model=net, input_size=input_shape, device="cpu")
+
+    print("\n****************** net.children ******************")
+    for x in net.children():
+        print(x)
+
+    print("\n****************** net.named_children ******************")
+    for name, x in net.named_children():
+        print(f"{name}:\t {x}")
+
+    print("\n****************** net.modules ******************")
+    for x in net.modules():
+        print(x)
+
+    print("\n****************** net.named_modules ******************")
+    for name, x in net.named_modules():
+        print(f"{name}:\t {x}")
+
+    print("\n****************** net.parameters ******************")
+    params = list(net.parameters())
+    print(params[-1].shape)
+
+    print("\n****************** net.named_parameters ******************")
+    for name, params in net.named_parameters():
+        print(f"{name}:\t {params.shape}")
+
+    print("\n****************** net.state_dict ******************")
+    for k, v in net.state_dict().items():
+        print(f"{k}:\t {v.shape}")
