@@ -4,7 +4,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import gc
 import torch
 import torch.nn as nn
 from torch import optim
@@ -13,11 +12,11 @@ from torch.utils.data import DataLoader
 from torchvision import models
 from torchvision import transforms, datasets
 
-from Demos.common import utils
+from common import utils
 import network_model
 
 
-class LayerActivations():
+class LayerActivations:
     features = None
 
     def __init__(self, model, layer_num):
@@ -49,7 +48,7 @@ def data_gen(conv_feat, labels, batch_size=64, shuffle=True):
         conv_feat = conv_feat[index]
         labels = labels[index]
     for idx in range(0, len(conv_feat), batch_size):
-        yield conv_feat[idx:idx + batch_size], labels[idx:idx + batch_size]
+        yield conv_feat[idx : idx + batch_size], labels[idx : idx + batch_size]
 
 
 def preconvfeat(dataset, model):
@@ -85,19 +84,25 @@ def main():
 
     stats = torch.cuda.memory_stats(device=torch.cuda.current_device())
 
-    print(f'stats:\n{stats}')
-    print(f'max: {torch.cuda.max_memory_allocated(device=torch.cuda.current_device())}')
+    print(f"stats:\n{stats}")
+    print(f"max: {torch.cuda.max_memory_allocated(device=torch.cuda.current_device())}")
 
     print("Load data into PyTorch tensors\n")
 
-    simple_transform = transforms.Compose([transforms.Resize((224, 224)),
-                                           transforms.ToTensor(),
-                                           transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
+    simple_transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+        ]
+    )
 
-    train = datasets.ImageFolder('/tmp/dogs-vs-cats/train/', simple_transform)
-    valid = datasets.ImageFolder('/tmp/dogs-vs-cats/valid/', simple_transform)
+    train = datasets.ImageFolder("/tmp/dogs-vs-cats/train/", simple_transform)
+    valid = datasets.ImageFolder("/tmp/dogs-vs-cats/valid/", simple_transform)
 
-    train_data_loader = torch.utils.data.DataLoader(train, batch_size=32, num_workers=3, shuffle=True)
+    train_data_loader = torch.utils.data.DataLoader(
+        train, batch_size=32, num_workers=3, shuffle=True
+    )
     valid_data_loader = torch.utils.data.DataLoader(valid, batch_size=32, num_workers=3)
 
     vgg = models.vgg16(pretrained=True)
@@ -116,8 +121,12 @@ def main():
     train_losses, train_accuracy = [], []
     val_losses, val_accuracy = [], []
     for epoch in range(1, 10):
-        epoch_loss, epoch_accuracy = network_model.fit_vgg(vgg, optimizer, train_data_loader, phase='training')
-        val_epoch_loss, val_epoch_accuracy = network_model.fit_vgg(vgg, optimizer, valid_data_loader, phase='validation')
+        epoch_loss, epoch_accuracy = network_model.fit_vgg(
+            vgg, optimizer, train_data_loader, phase="training"
+        )
+        val_epoch_loss, val_epoch_accuracy = network_model.fit_vgg(
+            vgg, optimizer, valid_data_loader, phase="validation"
+        )
         train_losses.append(epoch_loss)
         train_accuracy.append(epoch_accuracy)
         val_losses.append(val_epoch_loss)
@@ -132,9 +141,12 @@ def main():
     train_losses, train_accuracy = [], []
     val_losses, val_accuracy = [], []
     for epoch in range(1, 3):
-        epoch_loss, epoch_accuracy = network_model.fit_vgg(vgg, optimizer, train_data_loader, phase='training')
-        val_epoch_loss, val_epoch_accuracy = network_model.fit_vgg(vgg, optimizer, valid_data_loader,
-                                                                   phase='validation')
+        epoch_loss, epoch_accuracy = network_model.fit_vgg(
+            vgg, optimizer, train_data_loader, phase="training"
+        )
+        val_epoch_loss, val_epoch_accuracy = network_model.fit_vgg(
+            vgg, optimizer, valid_data_loader, phase="validation"
+        )
         train_losses.append(epoch_loss)
         train_accuracy.append(epoch_accuracy)
         val_losses.append(val_epoch_loss)
@@ -142,14 +154,17 @@ def main():
 
     print("Data augmentation")
 
-    train_transform = transforms.Compose([transforms.Resize((224, 224)),
-                                          transforms.RandomHorizontalFlip(),
-                                          transforms.RandomRotation(0.2),
-                                          transforms.ToTensor(),
-                                          transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-                                          ])
-    train = datasets.ImageFolder('/tmp/dogs-vs-cats/train/', train_transform)
-    valid = datasets.ImageFolder('/tmp/dogs-vs-cats/valid/', simple_transform)
+    train_transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomRotation(0.2),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+        ]
+    )
+    train = datasets.ImageFolder("/tmp/dogs-vs-cats/train/", train_transform)
+    valid = datasets.ImageFolder("/tmp/dogs-vs-cats/valid/", simple_transform)
 
     train_data_loader = DataLoader(train, batch_size=32, num_workers=3, shuffle=True)
     valid_data_loader = DataLoader(valid, batch_size=32, num_workers=3, shuffle=True)
@@ -157,9 +172,12 @@ def main():
     train_losses, train_accuracy = [], []
     val_losses, val_accuracy = [], []
     for epoch in range(1, 3):
-        epoch_loss, epoch_accuracy = network_model.fit_vgg(vgg, optimizer, train_data_loader, phase='training')
-        val_epoch_loss, val_epoch_accuracy = network_model.fit_vgg(vgg, optimizer, valid_data_loader,
-                                                                   phase='validation')
+        epoch_loss, epoch_accuracy = network_model.fit_vgg(
+            vgg, optimizer, train_data_loader, phase="training"
+        )
+        val_epoch_loss, val_epoch_accuracy = network_model.fit_vgg(
+            vgg, optimizer, valid_data_loader, phase="validation"
+        )
         train_losses.append(epoch_loss)
         train_accuracy.append(epoch_accuracy)
         val_losses.append(val_epoch_loss)
@@ -172,7 +190,8 @@ def main():
 
     features = vgg.features
 
-    for param in features.parameters(): param.requires_grad = False
+    for param in features.parameters():
+        param.requires_grad = False
 
     train_data_loader = DataLoader(train, batch_size=32, num_workers=3, shuffle=False)
     valid_data_loader = DataLoader(valid, batch_size=32, num_workers=3, shuffle=False)
@@ -191,10 +210,12 @@ def main():
     train_losses, train_accuracy = [], []
     val_losses, val_accuracy = [], []
     for epoch in range(1, 20):
-        epoch_loss, epoch_accuracy = network_model.fit_numpy(vgg.classifier, optimizer, train_feat_loader,
-                                                             phase='training')
-        val_epoch_loss, val_epoch_accuracy = network_model.fit_numpy(vgg.classifier, optimizer, val_feat_loader,
-                                                                     phase='validation')
+        epoch_loss, epoch_accuracy = network_model.fit_numpy(
+            vgg.classifier, optimizer, train_feat_loader, phase="training"
+        )
+        val_epoch_loss, val_epoch_accuracy = network_model.fit_numpy(
+            vgg.classifier, optimizer, val_feat_loader, phase="validation"
+        )
         train_losses.append(epoch_loss)
         train_accuracy.append(epoch_accuracy)
         val_losses.append(val_epoch_loss)
@@ -202,7 +223,9 @@ def main():
 
     print("Visualizing intermediate CNN layers")
 
-    train_data_loader = torch.utils.data.DataLoader(train, batch_size=32, num_workers=3, shuffle=False)
+    train_data_loader = torch.utils.data.DataLoader(
+        train, batch_size=32, num_workers=3, shuffle=False
+    )
     img, label = next(iter(train_data_loader))
 
     img_tmp = utils.transform_invert(img[5], simple_transform)
@@ -253,7 +276,7 @@ def main():
 
     vgg = models.vgg16(pretrained=True).cuda()
     vgg.state_dict().keys()
-    cnn_weights = vgg.state_dict()['features.0.weight'].cpu()
+    cnn_weights = vgg.state_dict()["features.0.weight"].cpu()
 
     fig = plt.figure(figsize=(30, 30))
     fig.subplots_adjust(left=0, right=1, bottom=0, top=0.8, hspace=0, wspace=0.2)

@@ -29,10 +29,10 @@ class Net(nn.Module):
         return F.log_softmax(x, dim=1)
 
 
-def fit(model, optimizer, data_loader, phase='training', volatile=False):
-    if phase == 'training':
+def fit(model, optimizer, data_loader, phase="training", volatile=False):
+    if phase == "training":
         model.train()
-    if phase == 'validation':
+    if phase == "validation":
         model.eval()
         volatile = True
     running_loss = 0.0
@@ -41,33 +41,34 @@ def fit(model, optimizer, data_loader, phase='training', volatile=False):
         if torch.cuda.is_available():
             data, target = data.cuda(), target.cuda()
         data, target = Variable(data, volatile), Variable(target)
-        if phase == 'training':
+        if phase == "training":
             optimizer.zero_grad()
         output = model(data)
         loss = F.nll_loss(output, target)
-        loss_tmp = F.nll_loss(output, target, reduction='sum')  # size_average=False
+        loss_tmp = F.nll_loss(output, target, reduction="sum")  # size_average=False
         if len(list(loss_tmp.data.size())) != 0:  # cggos 20211120
             running_loss += loss_tmp.data[0]
         else:
             running_loss += loss_tmp.data.item()
         preds = output.data.max(dim=1, keepdim=True)[1]
         running_correct += preds.eq(target.data.view_as(preds)).cpu().sum()
-        if phase == 'training':
+        if phase == "training":
             loss.backward()
             optimizer.step()
 
     loss = running_loss / len(data_loader.dataset)
-    accuracy = 100. * running_correct / len(data_loader.dataset)
+    accuracy = 100.0 * running_correct / len(data_loader.dataset)
 
     print(
-        f'{phase} loss is {loss:{5}.{2}} and {phase} accuracy is {running_correct}/{len(data_loader.dataset)}{accuracy:{10}.{4}}')
+        f"{phase} loss is {loss:{5}.{2}} and {phase} accuracy is {running_correct}/{len(data_loader.dataset)}{accuracy:{10}.{4}}"
+    )
     return loss, accuracy
 
 
-def fit_vgg(model, optimizer, data_loader, phase='training', volatile=False):
-    if phase == 'training':
+def fit_vgg(model, optimizer, data_loader, phase="training", volatile=False):
+    if phase == "training":
         model.train()
-    if phase == 'validation':
+    if phase == "validation":
         model.eval()
         volatile = True
     running_loss = 0.0
@@ -76,7 +77,7 @@ def fit_vgg(model, optimizer, data_loader, phase='training', volatile=False):
         if torch.cuda.is_available():
             data, target = data.cuda(), target.cuda()
         data, target = Variable(data, volatile), Variable(target)
-        if phase == 'training':
+        if phase == "training":
             optimizer.zero_grad()
         output = model(data)
         loss = F.cross_entropy(output, target)
@@ -87,22 +88,23 @@ def fit_vgg(model, optimizer, data_loader, phase='training', volatile=False):
             running_loss += loss_tmp.data.item()
         preds = output.data.max(dim=1, keepdim=True)[1]
         running_correct += preds.eq(target.data.view_as(preds)).cpu().sum()
-        if phase == 'training':
+        if phase == "training":
             loss.backward()
             optimizer.step()
 
     loss = running_loss / len(data_loader.dataset)
-    accuracy = 100. * running_correct / len(data_loader.dataset)
+    accuracy = 100.0 * running_correct / len(data_loader.dataset)
 
     print(
-        f'{phase} loss is {loss:{5}.{2}} and {phase} accuracy is {running_correct}/{len(data_loader.dataset)}{accuracy:{10}.{4}}')
+        f"{phase} loss is {loss:{5}.{2}} and {phase} accuracy is {running_correct}/{len(data_loader.dataset)}{accuracy:{10}.{4}}"
+    )
     return loss, accuracy
 
 
-def fit_numpy(model, optimizer, data_loader, phase='training', volatile=False):
-    if phase == 'training':
+def fit_numpy(model, optimizer, data_loader, phase="training", volatile=False):
+    if phase == "training":
         model.train()
-    if phase == 'validation':
+    if phase == "validation":
         model.eval()
         volatile = True
     running_loss = 0.0
@@ -111,7 +113,7 @@ def fit_numpy(model, optimizer, data_loader, phase='training', volatile=False):
         if torch.cuda.is_available():
             data, target = data.cuda(), target.cuda()
         data, target = Variable(data, volatile), Variable(target)
-        if phase == 'training':
+        if phase == "training":
             optimizer.zero_grad()
         data = data.view(data.size(0), -1)
         output = model(data)
@@ -123,15 +125,16 @@ def fit_numpy(model, optimizer, data_loader, phase='training', volatile=False):
             running_loss += loss_tmp.data.item()
         preds = output.data.max(dim=1, keepdim=True)[1]
         running_correct += preds.eq(target.data.view_as(preds)).cpu().sum()
-        if phase == 'training':
+        if phase == "training":
             loss.backward()
             optimizer.step()
 
     loss = running_loss / len(data_loader.dataset)
-    accuracy = 100. * running_correct / len(data_loader.dataset)
+    accuracy = 100.0 * running_correct / len(data_loader.dataset)
 
     print(
-        f'{phase} loss is {loss:{5}.{2}} and {phase} accuracy is {running_correct}/{len(data_loader.dataset)}{accuracy:{10}.{4}}')
+        f"{phase} loss is {loss:{5}.{2}} and {phase} accuracy is {running_correct}/{len(data_loader.dataset)}{accuracy:{10}.{4}}"
+    )
     return loss, accuracy
 
 
@@ -143,19 +146,21 @@ def create_model():
     return model_ft
 
 
-def train_model(model, criterion, optimizer, scheduler, dataset_sizes, data_loaders, num_epochs=5):
+def train_model(
+    model, criterion, optimizer, scheduler, dataset_sizes, data_loaders, num_epochs=5
+):
     since = time.time()
 
     best_model_wts = model.state_dict()
     best_acc = 0.0
 
     for epoch in range(num_epochs):
-        print('Epoch {}/{}'.format(epoch, num_epochs - 1))
-        print('-' * 10)
+        print("Epoch {}/{}".format(epoch, num_epochs - 1))
+        print("-" * 10)
 
         # Each epoch has a training and validation phase
-        for phase in ['train', 'valid']:
-            if phase == 'train':
+        for phase in ["train", "valid"]:
+            if phase == "train":
                 scheduler.step()
                 model.train(True)  # Set model to training mode
             else:
@@ -185,7 +190,7 @@ def train_model(model, criterion, optimizer, scheduler, dataset_sizes, data_load
                 loss = criterion(outputs, labels)
 
                 # backward + optimize only if in training phase
-                if phase == 'train':
+                if phase == "train":
                     loss.backward()
                     optimizer.step()
 
@@ -199,18 +204,22 @@ def train_model(model, criterion, optimizer, scheduler, dataset_sizes, data_load
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects / dataset_sizes[phase]
 
-            print('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
+            print("{} Loss: {:.4f} Acc: {:.4f}".format(phase, epoch_loss, epoch_acc))
 
             # deep copy the model
-            if phase == 'valid' and epoch_acc > best_acc:
+            if phase == "valid" and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 best_model_wts = model.state_dict()
 
         print()
 
     time_elapsed = time.time() - since
-    print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
-    print('Best val Acc: {:4f}'.format(best_acc))
+    print(
+        "Training complete in {:.0f}m {:.0f}s".format(
+            time_elapsed // 60, time_elapsed % 60
+        )
+    )
+    print("Best val Acc: {:4f}".format(best_acc))
 
     # load best model weights
     model.load_state_dict(best_model_wts)

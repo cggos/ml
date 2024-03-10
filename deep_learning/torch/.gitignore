@@ -1,4 +1,8 @@
 *.pt
 *.pth
+*.pkl
+*.onnx
+
 dataset/
 logs*/
+runs/

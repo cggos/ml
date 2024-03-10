@@ -44,17 +44,22 @@ if method == 2:
     scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
     loss_classification = torch.nn.CrossEntropyLoss()
 
-    save_dict = {
-        "epoch": n_epoch,
-        "model": model_pretrained.state_dict(),
-        "optimizer": optimizer.state_dict(),
-        "scheduler": scheduler.state_dict(),
-    }
+    torch.save(
+        {
+            "epoch": n_epoch,
+            "model": model_pretrained.state_dict(),
+            "optimizer": optimizer.state_dict(),
+            "scheduler": scheduler.state_dict(),
+        },
+        model_path,
+    )
 
-    torch.save(save_dict, model_path)
+    checkpoint = torch.load(model_path, map_location="cpu")
 
-    model = torch.load(model_path, map_location="cpu")
+    model.load_state_dict(checkpoint["model"])
+    optimizer.load_state_dict(checkpoint["optimizer"])
+    epoch = checkpoint["epoch"]
 
     print(f"\nmodel state_dict items:\n")
-    for key, value in model["model"].items():
+    for key, value in checkpoint["model"].items():
         print(key, value.size(), sep="  ")

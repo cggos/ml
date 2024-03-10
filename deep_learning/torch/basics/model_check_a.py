@@ -1,9 +1,10 @@
 import torch
 
-from models.model_diy import LeNet5
+import models_diy
 import common.utils as utils
 
-net = LeNet5()
+
+net = models_diy.LeNet5()
 
 print("\n****************** net ******************")
 print(net)

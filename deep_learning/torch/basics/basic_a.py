@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
 import numpy as np
 import torch
 import time
@@ -52,9 +51,22 @@ a.matmul(b)
 te = time.time()
 print("time cost: ", te - ts, "s")
 
-ts = time.time()
-a = a.cuda()
-b = b.cuda()
-a.matmul(b)
-te = time.time()
-print("time cost: ", te - ts, "s")
+if torch.cuda.is_available():
+    ts = time.time()
+    a = a.cuda()
+    b = b.cuda()
+    a.matmul(b)
+    te = time.time()
+    print("time cost: ", te - ts, "s")
+
+x = torch.arange(1, 3).view(1, 2)
+y = torch.arange(1, 4).view(3, 1)
+print(x)
+print(y)
+print(x + y)
+
+a = torch.Tensor([[[1, 2, 3], [4, 5, 6]]])
+print(a.view(-1))
+print(a.view(2, -1))
+print(a.view(3, 2))
+print(a.view(3, 1, 2))

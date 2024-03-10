@@ -2,10 +2,12 @@ import os
 import random
 import shutil
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     random.seed(1)
 
-    dataset_dir = os.path.join("/dev_sdb/datasets", "rmb_1vs100")  # where does dataset come from?
+    dataset_dir = os.path.join(
+        "/dev_sdb/datasets", "rmb_1vs100"
+    )  # where does dataset come from?
 
     split_dir = os.path.join("/tmp", "rmb_split")  # where does dataset be splitted to?
     train_dir = os.path.join(split_dir, "train")
@@ -20,7 +22,7 @@ if __name__ == '__main__':
         for sub_dir in dirs:
 
             imgs = os.listdir(os.path.join(root, sub_dir))
-            imgs = list(filter(lambda x: x.endswith('.jpg'), imgs))
+            imgs = list(filter(lambda x: x.endswith(".jpg"), imgs))
             random.shuffle(imgs)
             img_count = len(imgs)
 
@@ -43,5 +45,11 @@ if __name__ == '__main__':
 
                 shutil.copy(src_path, target_path)
 
-            print('Class:{}, train:{}, valid:{}, test:{}'.format(
-                sub_dir, train_point, valid_point - train_point, img_count - valid_point))
+            print(
+                "Class:{}, train:{}, valid:{}, test:{}".format(
+                    sub_dir,
+                    train_point,
+                    valid_point - train_point,
+                    img_count - valid_point,
+                )
+            )
