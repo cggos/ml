@@ -1,3 +1,7 @@
+"""
+local cache: ~/.cache/torch/hub/
+"""
+
 import torch
 from torchvision.models import resnet50, ResNet50_Weights
 
