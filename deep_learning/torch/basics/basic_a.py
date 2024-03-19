@@ -7,8 +7,12 @@ import time
 
 print("torch version: {}".format(torch.__version__))
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print("Using gpu: %s " % torch.cuda.is_available())
+device = torch.device("cpu")
+if torch.cuda.is_available():
+    device = torch.device("cuda:0")
+if torch.backends.mps.is_available() and torch.backends.mps.is_built():
+    device = torch.device("mps")
+print("Using gpu: %s " % device)
 
 x = torch.Tensor(5, 3)  # 构造一个未初始化的5*3的矩阵
 x = torch.rand(5, 3)  # 构造一个随机初始化的矩阵
@@ -49,7 +53,7 @@ a = torch.rand(10000, 10000)
 b = torch.rand(10000, 10000)
 a.matmul(b)
 te = time.time()
-print("time cost: ", te - ts, "s")
+print("time cost (cpu): ", te - ts, "s")
 
 if torch.cuda.is_available():
     ts = time.time()
@@ -57,7 +61,15 @@ if torch.cuda.is_available():
     b = b.cuda()
     a.matmul(b)
     te = time.time()
-    print("time cost: ", te - ts, "s")
+    print("time cost (cuda): ", te - ts, "s")
+
+if torch.backends.mps.is_available() and torch.backends.mps.is_built():
+    ts = time.time()
+    a = a.to(device)
+    b = b.to(device)
+    a.matmul(b)
+    te = time.time()
+    print("time cost (mps): ", te - ts, "s")
 
 x = torch.arange(1, 3).view(1, 2)
 y = torch.arange(1, 4).view(3, 1)
