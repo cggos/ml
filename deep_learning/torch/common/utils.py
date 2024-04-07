@@ -1,11 +1,23 @@
 import numpy as np
 from PIL import Image
+import matplotlib.pyplot as plt
 
 import torch
 from torchvision import transforms
 
 # from torchsummary import summary
 from torchinfo import summary
+
+
+def show_imgs(img_raw, img_result):
+    plt.figure()
+    plt.subplot(1, 2, 1)
+    plt.imshow(img_raw)
+    plt.axis("off")
+    plt.subplot(1, 2, 2)
+    plt.imshow(img_result)
+    plt.axis("off")
+    plt.show()
 
 
 def transform_invert(img_, transform_train):

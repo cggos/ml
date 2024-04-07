@@ -6,6 +6,8 @@ import torch
 from torchvision import models
 import torchvision.transforms as T
 
+from common import dataset
+
 
 def plot_mask(img, masks, colors=None, alpha=0.5) -> np.ndarray:
     """Visualize segmentation mask.
@@ -42,51 +44,6 @@ def plot_mask(img, masks, colors=None, alpha=0.5) -> np.ndarray:
     return img.astype(np.uint8)
 
 
-def decode_segmap(image, nc=21):
-    label_colors = np.array(
-        [
-            (0, 0, 0),  # 0=background
-            # 1=aeroplane, 2=bicycle, 3=bird, 4=boat, 5=bottle
-            (128, 0, 0),
-            (0, 128, 0),
-            (128, 128, 0),
-            (0, 0, 128),
-            (128, 0, 128),
-            # 6=bus, 7=car, 8=cat, 9=chair, 10=cow
-            (0, 128, 128),
-            (128, 128, 128),
-            (64, 0, 0),
-            (192, 0, 0),
-            (64, 128, 0),
-            # 11=dining table, 12=dog, 13=horse, 14=motorbike, 15=person
-            (192, 128, 0),
-            (64, 0, 128),
-            (192, 0, 128),
-            (64, 128, 128),
-            (192, 128, 128),
-            # 16=potted plant, 17=sheep, 18=sofa, 19=train, 20=tv/monitor
-            (0, 64, 0),
-            (128, 64, 0),
-            (0, 192, 0),
-            (128, 192, 0),
-            (0, 64, 128),
-        ]
-    )
-
-    r = np.zeros_like(image).astype(np.uint8)
-    g = np.zeros_like(image).astype(np.uint8)
-    b = np.zeros_like(image).astype(np.uint8)
-
-    for l in range(0, nc):
-        idx = image == l
-        r[idx] = label_colors[l, 0]
-        g[idx] = label_colors[l, 1]
-        b[idx] = label_colors[l, 2]
-
-    rgb = np.stack([r, g, b], axis=2)
-    return rgb
-
-
 def segment(model, image):
     # Apply the transformations needed
     trf = T.Compose(
@@ -107,7 +64,7 @@ def segment(model, image):
     print(om.shape)
     print(np.unique(om))
 
-    return decode_segmap(om)
+    return dataset.PASCAL_VOC.decode_segmap(om)
 
 
 print(cv2.__version__)
@@ -119,7 +76,9 @@ if not (cap.isOpened()):
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
-model = models.segmentation.deeplabv3_mobilenet_v3_large(pretrained=True).eval()
+model = models.segmentation.deeplabv3_mobilenet_v3_large(
+    weights=models.segmentation.DeepLabV3_MobileNet_V3_Large_Weights.COCO_WITH_VOC_LABELS_V1
+).eval()
 
 while True:
     ret, frame = cap.read()
