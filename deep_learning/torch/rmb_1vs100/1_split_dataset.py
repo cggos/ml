@@ -5,11 +5,9 @@ import shutil
 if __name__ == "__main__":
     random.seed(1)
 
-    dataset_dir = os.path.join(
-        "/dev_sdb/datasets", "rmb_1vs100"
-    )  # where does dataset come from?
+    dataset_dir = os.path.join("/dev_sdb/datasets", "rmb_1vs100")
 
-    split_dir = os.path.join("/tmp", "rmb_split")  # where does dataset be splitted to?
+    split_dir = os.path.join("/tmp", "rmb_split")
     train_dir = os.path.join(split_dir, "train")
     valid_dir = os.path.join(split_dir, "valid")
     test_dir = os.path.join(split_dir, "test")

@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms, datasets
 
 from common import utils
+from models_diy import net_binary_classification
 import network_model
 
 
@@ -80,7 +81,8 @@ def train01(dataset_sizes, data_loaders):
 
 
 def train02(train_data_loader, valid_data_loader):
-    model = network_model.Net()
+    model = net_binary_classification.Net00()
+
     if torch.cuda.is_available():
         model.cuda()
 

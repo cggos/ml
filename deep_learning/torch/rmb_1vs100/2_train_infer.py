@@ -6,7 +6,6 @@
 # @brief      : train classification model of RMB
 """
 import os
-import random
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -16,21 +15,14 @@ from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 import torch.optim as optim
 
-from models_diy import LeNet
+from common import utils
+from models_diy import LeNet5_01
 from rmb_dataset import RMBDataset
 
 
-def set_seed(seed=1):
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-
-
-set_seed()  # 设置随机种子
+utils.set_seed()
 rmb_label = {"1": 0, "100": 1}
 
-# 参数设置
 MAX_EPOCH = 10
 BATCH_SIZE = 16
 LR = 0.01
@@ -46,7 +38,6 @@ test_dir = os.path.join(split_dir, "test")
 norm_mean = [0.485, 0.456, 0.406]
 norm_std = [0.229, 0.224, 0.225]
 
-# transforms.Compose: 将图像处理方法进行有序的组合
 train_transform = transforms.Compose(
     [
         transforms.Resize((32, 32)),
@@ -64,26 +55,22 @@ valid_transform = transforms.Compose(
     ]
 )
 
-# 构建MyDataset实例
 train_data = RMBDataset(data_dir=train_dir, transform=train_transform)
 valid_data = RMBDataset(data_dir=valid_dir, transform=valid_transform)
 
-# 构建DataLoder
 train_loader = DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True)
 valid_loader = DataLoader(dataset=valid_data, batch_size=BATCH_SIZE)
 
 # ============================ step 2/5 模型 ============================
-net = LeNet(classes=2)
+net = LeNet5_01(classes=2)
 net.initialize_weights()
 
 # ============================ step 3/5 损失函数 ============================
 criterion = nn.CrossEntropyLoss()  # 选择损失函数
 
 # ============================ step 4/5 优化器 ============================
-optimizer = optim.SGD(net.parameters(), lr=LR, momentum=0.9)  # 选择优化器
-scheduler = torch.optim.lr_scheduler.StepLR(
-    optimizer, step_size=10, gamma=0.1
-)  # 设置学习率下降策略
+optimizer = optim.SGD(net.parameters(), lr=LR, momentum=0.9)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
 
 # ============================ step 5/5 训练 ============================
 train_curve = list()

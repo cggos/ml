@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -7,6 +9,14 @@ from torchvision import transforms
 
 # from torchsummary import summary
 from torchinfo import summary
+
+
+def set_seed(seed=1):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
 
 
 def show_imgs(img_raw, img_result):

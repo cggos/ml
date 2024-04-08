@@ -12,10 +12,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class LeNet5(nn.Module):
-
+class LeNet5_00(nn.Module):
     def __init__(self):
-        super(LeNet5, self).__init__()
+        super(LeNet5_00, self).__init__()
         # 输入图像channel：1；输出channel：6；5x5卷积核
         self.C1 = nn.Conv2d(1, 6, 5)
         self.C3 = nn.Conv2d(6, 16, 5)
@@ -43,9 +42,9 @@ class LeNet5(nn.Module):
         return num_features
 
 
-class LeNet(nn.Module):
+class LeNet5_01(nn.Module):
     def __init__(self, classes):
-        super(LeNet, self).__init__()
+        super(LeNet5_01, self).__init__()
         self.conv1 = nn.Conv2d(3, 6, 5)
         self.conv2 = nn.Conv2d(6, 16, 5)
         self.fc1 = nn.Linear(16 * 5 * 5, 120)
@@ -77,9 +76,9 @@ class LeNet(nn.Module):
                 m.bias.data.zero_()
 
 
-class LeNet2(nn.Module):
+class LeNet5_02(nn.Module):
     def __init__(self, classes):
-        super(LeNet2, self).__init__()
+        super(LeNet5_02, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 6, 5),
             nn.ReLU(),
