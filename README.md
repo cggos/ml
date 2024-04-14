@@ -2,4 +2,6 @@
 
 ---
 
-- https://github.com/cggos/dl_with_pytorch
+```bash
+export PYTHONPATH=$PYTHONPATH:`pwd`
+```
