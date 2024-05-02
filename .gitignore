@@ -92,4 +92,6 @@ site/
 
 .idea/
 
+.DS_Store
+
 *.out*
