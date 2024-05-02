@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 
 import matplotlib
+
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
@@ -51,6 +52,8 @@ vgg = models.vgg16(pretrained=True)
 
 print(vgg)
 
+print(vgg.state_dict().keys())
+
 conv_out = LayerActivations(vgg.features, 5)
 
 print(imgT.shape)
@@ -67,5 +70,13 @@ fig.subplots_adjust(left=0, right=1, bottom=0, top=0.8, hspace=0, wspace=0.2)
 for i in range(30):
     ax = fig.add_subplot(12, 5, i + 1, xticks=[], yticks=[])
     ax.imshow(act[0][i])
+
+
+cnn_weights = vgg.state_dict()['features.0.weight'].cpu()
+fig = plt.figure(figsize=(30, 30))
+fig.subplots_adjust(left=0, right=1, bottom=0, top=0.8, hspace=0, wspace=0.2)
+for i in range(30):
+    ax = fig.add_subplot(12, 6, i + 1, xticks=[], yticks=[])
+    imshow(cnn_weights[i])
 
 plt.show()
