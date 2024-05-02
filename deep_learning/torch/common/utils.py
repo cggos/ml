@@ -101,6 +101,9 @@ def output_model_params(net, input_shape):
 
 
 class LayerActivations:
+    """
+    在不改动网络结构的情况下获取网络中间层输出
+    """
     features = None
 
     def __init__(self, model_layer):

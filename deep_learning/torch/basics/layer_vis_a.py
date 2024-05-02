@@ -35,21 +35,15 @@ simple_transform = T.Compose(
     ]
 )
 imgT = simple_transform(img_raw)
-
-
-vgg = models.vgg16(pretrained=True)
-
-print(vgg)
-
-print(vgg.state_dict().keys())
-
-conv_out = LayerActivations(vgg.features[5])
-
 print(imgT.shape)
 imshow(imgT)
 
-o = vgg(Variable(imgT.unsqueeze(0)))
+vgg = models.vgg16(pretrained=True)
+print(vgg)
+print(vgg.state_dict().keys())
 
+conv_out = LayerActivations(vgg.features[5])
+_ = vgg(Variable(imgT.unsqueeze(0)))
 conv_out.remove()
 
 act = conv_out.features
