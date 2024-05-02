@@ -98,3 +98,17 @@ def output_model_params(net, input_shape):
     print("\n****************** net.state_dict ******************")
     for k, v in net.state_dict().items():
         print(f"{k}:\t {v.shape}")
+
+
+class LayerActivations:
+    features = None
+
+    def __init__(self, model_layer):
+        self.hook = model_layer.register_forward_hook(self.hook_fn)
+
+    def hook_fn(self, module, input, output):
+        self.features = output.cpu().data.numpy()
+        # self.features.append(output.clone().detach())
+
+    def remove(self):
+        self.hook.remove()

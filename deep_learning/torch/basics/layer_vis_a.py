@@ -10,6 +10,8 @@ from torch.autograd import Variable
 from torchvision import models
 import torchvision.transforms as T
 
+from common.utils import LayerActivations
+
 
 def imshow(inp, cmap=None):
     """Imshow for Tensor."""
@@ -19,19 +21,6 @@ def imshow(inp, cmap=None):
     inp = std * inp + mean
     inp = np.clip(inp, 0, 1)
     plt.imshow(inp, cmap)
-
-
-class LayerActivations:
-    features = None
-
-    def __init__(self, model, layer_num):
-        self.hook = model[layer_num].register_forward_hook(self.hook_fn)
-
-    def hook_fn(self, module, input, output):
-        self.features = output.cpu().data.numpy()
-
-    def remove(self):
-        self.hook.remove()
 
 
 img_path = "./data/cat.194.jpg"
@@ -54,7 +43,7 @@ print(vgg)
 
 print(vgg.state_dict().keys())
 
-conv_out = LayerActivations(vgg.features, 5)
+conv_out = LayerActivations(vgg.features[5])
 
 print(imgT.shape)
 imshow(imgT)
