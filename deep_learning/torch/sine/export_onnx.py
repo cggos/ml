@@ -7,9 +7,9 @@ if __name__ == '__main__':
     model = Net(1, 10, 1)
     model.eval()
 
-    utils.output_model_params(model, [1])
+    utils.output_model_params(model, [1, 1, 1, 1])
 
-    torch_input = torch.randn((1))
+    torch_input = torch.randn((1, 1, 1, 1))
     onnx_program = torch.onnx.export(
         model,
         torch_input,
