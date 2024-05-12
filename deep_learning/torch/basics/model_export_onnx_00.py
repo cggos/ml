@@ -11,5 +11,3 @@ input_names = ["input"]
 output_names = ["output"]
 
 torch.onnx.export(model, input_names, output_names, "model.onnx", opset_version=13, verbose=True)
-
-

@@ -1,5 +1,5 @@
 import torch.onnx
-from models.model_diy import LeNet5
+from models_diy import LeNet5
 
 onnx_name = "model_out.onnx"
 model = LeNet5()
