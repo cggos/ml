@@ -103,11 +103,14 @@ def output_model_params(net, input_shape):
     for k, v in net.state_dict().items():
         print(f"{k}:\t {v.shape}")
 
+    print("\n")
+
 
 class LayerActivations:
     """
     在不改动网络结构的情况下获取网络中间层输出
     """
+
     features = None
 
     def __init__(self, model_layer):
