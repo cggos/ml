@@ -29,6 +29,9 @@ if __name__ == '__main__':
         if epoch % 1000 == 0:
             print(f"After {epoch} iters, the loss is {loss.item()}")
 
+    x = np.arange(0.0, 1.0, 0.005)
+    x = x.reshape(200, 1)
+    x = torch.Tensor(x)
     h = model(x)
     x = x.data.numpy()
     h = h.data.numpy()
