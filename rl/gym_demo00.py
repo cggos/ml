@@ -1,7 +1,8 @@
 import gymnasium as gym
-from gym import envs
 
-print(envs.registry.keys())
+# from gym import envs
+
+# print(envs.registry.keys())
 # print(envs.registry.values())
 
 # env = gym.make("LunarLander-v2", render_mode="human")
@@ -17,7 +18,9 @@ timesteps = 1000
 
 for _ in range(timesteps):
     # print(observation)
-    action = env.action_space.sample()  # agent policy that uses the observation and info
+    action = (
+        env.action_space.sample()
+    )  # agent policy that uses the observation and info
     observation, reward, terminated, truncated, info = env.step(action)
 
     if terminated or truncated:
