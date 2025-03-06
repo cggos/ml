@@ -12,6 +12,8 @@ while not episode_over:
     )  # agent policy that uses the observation and info
     observation, reward, terminated, truncated, info = env.step(action)
 
+    print(info)
+
     episode_over = terminated or truncated
 
 env.close()
